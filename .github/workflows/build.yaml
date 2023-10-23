@@ -1,0 +1,58 @@
+# Cross build the Rust application using musl target on aarch64, x86_64 and mipsel, then publish them in the release.
+name: Build and Publish
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    matrix:
+      target: [aarch64, x86_64, mipsel]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Install cross
+        run: cargo install cross
+      - name: Build using cross
+        run: cross build --target ${{ matrix.target }}-unknown-linux-musl --release
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/cron-run
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download artifacts to target/
+        uses: actions/download-artifact@v2
+        with:
+          path: target/
+      - name: Rename each downloaded artifact based on it's folder name
+        run: |
+          cd target && for arch in *; do
+            mv -v $arch/cron-run ../cron-run.$arch
+          done
+        
+      - name: Publish to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          files: cron-run.*
+          tag_name: ${{ github.sha }}
+          body: |
+            **Changes**
+            ${{ github.event.compare }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
