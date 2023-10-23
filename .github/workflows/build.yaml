@@ -7,8 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    matrix:
-      target: [aarch64, x86_64, mipsel]
+    strategy:
+      matrix:
+        target: [aarch64, x86_64, mipsel]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
