@@ -26,7 +26,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/cron-run
+          path: target/${{ matrix.target }}-unknown-linux-musl/release/cron-run
 
   publish:
     runs-on: ubuntu-latest
