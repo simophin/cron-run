@@ -37,5 +37,3 @@ jobs:
           asset_path: target/${{ matrix.target }}-unknown-linux-musl/release/cron-run
           asset_name: cron-run.${{ matrix.target }}
           asset_content_type: application/octet-stream
-          # Overwrite the asset if it already exists
-          overwrite: true
