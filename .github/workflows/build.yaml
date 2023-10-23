@@ -1,8 +1,12 @@
 # Cross build the Rust application using musl target on aarch64, x86_64 and mipsel, then publish them in the release.
 name: Build and Publish
 on:
-  push:
+  # Run on each pull requests
   pull_request:
+  push: 
+  # Run on release is published
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -31,7 +35,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    # Run only if a release is published
+    if: github.event_name == 'release'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -44,16 +49,9 @@ jobs:
           cd target && for arch in *; do
             mv -v $arch/cron-run ../cron-run.$arch
           done
-        
-      - name: Publish to GitHub Releases
-        uses: softprops/action-gh-release@v1
+      - name: Attach the artifacts to the release
+        uses: actions/upload-release-asset@v1
         with:
-          files: cron-run.*
-          tag_name: ${{ github.sha }}
-          body: |
-            **Changes**
-            ${{ github.event.compare }}
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: cron-run.*
+          asset_content_type: application/octet-stream
