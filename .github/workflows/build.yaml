@@ -30,6 +30,8 @@ jobs:
         run: cross build --target ${{ matrix.target }}-unknown-linux-musl --release
       - name: Upload as release asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}Re
         # Run only if a release is published
         if: github.event_name == 'release'
         with:
