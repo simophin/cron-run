@@ -35,7 +35,7 @@ jobs:
       - name: Upload as release asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}Re
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # Run only if a release is published
         if: github.event_name == 'release'
         with:
