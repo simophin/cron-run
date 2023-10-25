@@ -28,17 +28,27 @@ jobs:
             binary_name: cron-run
             rust_target: aarch64-unknown-linux-musl
 
+          - release_for: linux.aarch64
+            os: ubuntu-latest
+            binary_name: cron-run
+            rust_target: aarch64-unknown-linux-musl
+
           - release_for: linux.amd64
             os: ubuntu-latest
             binary_name: cron-run
             rust_target: x86_64-unknown-linux-musl
 
-          - release_for: macos.amd64
+          - release_for: linux.x86_64
+            os: ubuntu-latest
+            binary_name: cron-run
+            rust_target: x86_64-unknown-linux-musl
+
+          - release_for: macos
             os: macos-latest
             binary_name: cron-run
             rust_target: x86_64-apple-darwin
 
-          - release_for: windows.amd64
+          - release_for: windows.exe
             os: windows-latest
             binary_name: cron-run.exe
             rust_target: x86_64-pc-windows-msvc
