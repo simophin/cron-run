@@ -20,26 +20,32 @@ jobs:
         platform:
           - release_for: linux.mipsel
             os: ubuntu-latest
+            binary_name: cron-run
             rust_target: mipsel-unknown-linux-musl
 
           - release_for: linux.arm64v8
             os: ubuntu-latest
+            binary_name: cron-run
             rust_target: aarch64-unknown-linux-musl
 
           - release_for: linux.amd64
             os: ubuntu-latest
+            binary_name: cron-run
             rust_target: x86_64-unknown-linux-musl
 
           - release_for: macos.amd64
             os: macos-latest
+            binary_name: cron-run
             rust_target: x86_64-apple-darwin
 
           - release_for: windows.amd64
             os: windows-latest
+            binary_name: cron-run.exe
             rust_target: x86_64-pc-windows-msvc
 
           - release_for: macos.arm64
             os: macos-latest
+            binary_name: cron-run
             rust_target: aarch64-apple-darwin
 
     runs-on: ${{ matrix.platform.os }}
@@ -69,6 +75,6 @@ jobs:
         if: github.event_name == 'release'
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: target/${{ matrix.platform.rust_target }}/release/cron-run
+          asset_path: target/${{ matrix.platform.rust_target }}/release/${{ matrix.platform.binary_name }}
           asset_name: cron-run.${{ matrix.platform.release_for }}
           asset_content_type: application/octet-stream
